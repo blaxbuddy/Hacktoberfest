@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DisasterTriageOutput",
+  "type": "object",
+  "properties": {
+    "hazard_type": {
+      "type": "string",
+      "enum": ["Flood", "Fire", "Structural", "Medical", "Weather"]
+    },
+    "severity_score": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "evacuation_needed": {
+      "type": "boolean"
+    },
+    "action_plan": {
+      "type": "string"
+    }
+  },
+  "required": ["hazard_type", "severity_score", "evacuation_needed", "action_plan"]
+}
