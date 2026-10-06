@@ -88,11 +88,56 @@ function timeAgo(dateStr: string) {
 }
 
 /* ═══════════════════════════════════════════════════
+   DUMMY DATA FOR SHOWCASE
+══════════════════════════════════════════════════════ */
+const DUMMY_INCIDENTS: Incident[] = [
+  {
+    id: '1',
+    title: 'Major Fire - Tech Park',
+    description: 'A large fire has broken out on the 4th floor of Building A. Smoke is spreading rapidly.',
+    severity: 'critical',
+    incident_type: 'fire',
+    lat: 28.6120,
+    lng: 77.2295,
+    address: 'Connaught Place, New Delhi',
+    status: 'active',
+    ai_analysis: 'CRITICAL WARNING: Fire signatures detected in multiple windows. Smoke density is high, indicating restricted ventilation. Immediate evacuation of all floors is required.',
+    image_url: 'https://images.unsplash.com/photo-1602980068989-cb21ea50a80e?auto=format&fit=crop&q=80',
+    created_at: new Date().toISOString()
+  },
+  {
+    id: '2',
+    title: 'Multi-vehicle Collision',
+    description: 'Three cars involved in a severe crash on the main highway. Traffic is blocked.',
+    severity: 'high',
+    incident_type: 'accident',
+    lat: 28.6200,
+    lng: 77.2100,
+    address: 'Ring Road, Delhi',
+    status: 'active',
+    ai_analysis: 'HIGH SEVERITY: Multi-vehicle pileup detected. Possible structural damage to vehicles. Emergency medical services should be dispatched.',
+    created_at: new Date(Date.now() - 900000).toISOString()
+  },
+  {
+    id: '3',
+    title: 'Waterlogging - Underpass',
+    description: 'Heavy rains have flooded the underpass, stranding several vehicles.',
+    severity: 'medium',
+    incident_type: 'flood',
+    lat: 28.5950,
+    lng: 77.2150,
+    address: 'South Ex Underpass',
+    status: 'active',
+    created_at: new Date(Date.now() - 3600000).toISOString()
+  }
+];
+
+/* ═══════════════════════════════════════════════════
    MAIN DASHBOARD PAGE
 ══════════════════════════════════════════════════════ */
 export default function DashboardPage() {
   /* ── state ── */
-  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [incidents, setIncidents] = useState<Incident[]>(DUMMY_INCIDENTS);
   const [isOnline, setIsOnline] = useState(true);
   const [showReport, setShowReport] = useState(false);
   const [showEvacuation, setShowEvacuation] = useState(false);
@@ -103,17 +148,10 @@ export default function DashboardPage() {
   const [pulseActive, setPulseActive] = useState(true);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
 
-  /* ── fetch incidents ── */
+  /* ── fetch incidents (disabled for dummy showcase) ── */
   const fetchIncidents = useCallback(async () => {
-    try {
-      const res = await fetch('/api/incidents');
-      if (!res.ok) throw new Error('fetch failed');
-      const data = await res.json();
-      setIncidents(data.incidents || []);
-      setIsOnline(true);
-    } catch {
-      setIsOnline(false);
-    }
+    // Keeping dummy data active
+    setIsOnline(true);
   }, []);
 
   /* ── realtime polling every 15 s ── */
@@ -213,16 +251,16 @@ export default function DashboardPage() {
           
           <button 
             onClick={() => setShowReport(true)} 
-            className="group relative z-10 flex flex-col items-center justify-center w-56 h-56 rounded-full bg-gradient-to-br from-red-500 to-orange-600 shadow-[0_0_60px_-15px_rgba(239,68,68,0.7)] hover:scale-105 transition-all duration-300"
+            className="group relative z-10 flex flex-col items-center justify-center w-full max-w-[320px] py-10 rounded-3xl bg-gradient-to-br from-red-500 to-orange-600 shadow-[0_0_60px_-15px_rgba(239,68,68,0.7)] hover:scale-105 transition-all duration-300 border border-white/20"
           >
-            <Camera size={72} className="text-white mb-3 group-hover:scale-110 transition-transform duration-300" />
+            <Camera size={64} className="text-white mb-3 group-hover:scale-110 transition-transform duration-300" />
             <span className="text-white font-black text-2xl tracking-wide uppercase">Report</span>
             <span className="text-white/80 text-sm mt-1 font-medium bg-black/20 px-3 py-1 rounded-full">Snap Photo & AI Assess</span>
           </button>
           
           <button 
             onClick={handleEvacuation} 
-            className="group relative z-10 flex flex-col items-center justify-center w-44 h-44 rounded-full border-2 border-orange-500/50 bg-orange-500/10 hover:bg-orange-500/20 shadow-[0_0_40px_-15px_rgba(249,115,22,0.4)] hover:scale-105 transition-all duration-300"
+            className="group relative z-10 flex flex-col items-center justify-center w-full max-w-[280px] py-10 rounded-3xl border-2 border-orange-500/50 bg-orange-500/10 hover:bg-orange-500/20 shadow-[0_0_40px_-15px_rgba(249,115,22,0.4)] hover:scale-105 transition-all duration-300"
           >
             <Navigation size={56} className="text-orange-400 mb-2 group-hover:scale-110 transition-transform duration-300" />
             <span className="text-orange-400 font-bold text-xl tracking-wide uppercase">Evacuate</span>
